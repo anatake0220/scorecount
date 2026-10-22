@@ -3,80 +3,306 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ランキング</title>
+
     <style>
         * {
             box-sizing: border-box;
         }
 
         body {
-            font-family: sans-serif;
-            background: #f2f4f8;
-            color: #222;
             margin: 0;
-            padding: 20px 16px;
+            min-height: 100vh;
+            padding: 40px 16px;
+            font-family: "Segoe UI", sans-serif;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at top, #452078 0%, transparent 45%),
+                linear-gradient(135deg, #100b24, #21113c 55%, #100b24);
         }
 
-        main {
-            max-width: 600px;
-            margin: auto;
+        .container {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
         }
 
         h1 {
+            margin: 0 0 12px;
             text-align: center;
+            font-size: clamp(32px, 6vw, 48px);
+            letter-spacing: 5px;
+            color: #83f7ff;
+            text-shadow:
+                0 0 8px #00eaff,
+                0 0 20px #00aaff,
+                0 0 40px #0077ff;
+        }
+
+        .subtitle {
+            margin-bottom: 32px;
+            text-align: center;
+            color: #c9b8ec;
+            font-size: 14px;
+            letter-spacing: 3px;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
         .player {
-            display: flex;
+            display: grid;
+            grid-template-columns: 90px minmax(0, 1fr) auto;
             align-items: center;
-            gap: 12px;
-            background: white;
-            padding: 16px;
-            margin-bottom: 10px;
-            border-radius: 12px;
+            gap: 16px;
+            padding: 20px 24px;
+            min-height: 86px;
+            border: 1px solid #7952a9;
+            border-radius: 14px;
+            background: linear-gradient(
+                110deg,
+                rgba(68, 38, 105, 0.95),
+                rgba(36, 22, 64, 0.96)
+            );
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.25),
+                inset 0 0 14px rgba(160, 100, 255, 0.06);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .player:hover {
+            transform: translateY(-2px);
+            border-color: #b79aff;
         }
 
         .rank {
+            color: #d7c2ff;
+            font-size: 21px;
             font-weight: bold;
-            min-width: 40px;
+            white-space: nowrap;
         }
 
         .name {
-            flex: 1;
+            min-width: 0;
             overflow-wrap: anywhere;
+            font-size: 19px;
+            font-weight: bold;
         }
 
         .score {
+            color: #83f7ff;
+            font-size: 20px;
             font-weight: bold;
             text-align: right;
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.35);
         }
 
-        a {
-            display: inline-block;
-            margin-top: 16px;
+        /* 1位 */
+        .player:nth-child(1) {
+            border: 2px solid #ffd86b;
+            background: linear-gradient(
+                110deg,
+                rgba(111, 76, 35, 0.95),
+                rgba(53, 35, 65, 0.98)
+            );
+            box-shadow:
+                0 0 18px rgba(255, 207, 75, 0.18),
+                inset 0 0 18px rgba(255, 215, 100, 0.08);
+        }
+
+        .player:nth-child(1) .rank {
+            color: #ffe17b;
+            font-size: 25px;
+            text-shadow: 0 0 12px rgba(255, 208, 70, 0.55);
+        }
+
+        .player:nth-child(1) .score {
+            color: #ffe17b;
+            text-shadow: 0 0 12px rgba(255, 208, 70, 0.45);
+        }
+
+        /* 2位 */
+        .player:nth-child(2) {
+            border-color: #cbd5e1;
+            box-shadow: 0 0 14px rgba(203, 213, 225, 0.12);
+        }
+
+        .player:nth-child(2) .rank {
+            color: #e2e8f0;
+        }
+
+        /* 3位 */
+        .player:nth-child(3) {
+            border-color: #d99a70;
+            box-shadow: 0 0 14px rgba(217, 154, 112, 0.12);
+        }
+
+        .player:nth-child(3) .rank {
+            color: #f2b58e;
+        }
+
+        .empty {
+            padding: 36px 20px;
+            text-align: center;
+            color: #d5c5ef;
+            background: rgba(51, 30, 79, 0.8);
+            border: 1px dashed #7952a9;
+            border-radius: 14px;
+        }
+
+        .back {
+            display: block;
+            width: fit-content;
+            margin: 32px auto 0;
+            padding: 13px 26px;
+            color: #83f7ff;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid #4bdde9;
+            border-radius: 10px;
+            background: rgba(31, 38, 77, 0.8);
+            box-shadow: 0 0 14px rgba(0, 234, 255, 0.12);
+            transition: 0.2s;
+        }
+
+        .back:hover {
+            color: #100b24;
+            background: #83f7ff;
+            box-shadow: 0 0 22px rgba(0, 234, 255, 0.4);
+        }
+
+        .delete-button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 22px;
+            color: #ffb8c0;
+            background: #35152e;
+            border: 1px solid #ff647c;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .delete-button:hover {
+            background: #5b1e3b;
+            box-shadow: 0 0 14px rgba(255, 100, 124, 0.25);
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 28px 12px;
+            }
+
+            .player {
+                grid-template-columns: 62px minmax(0, 1fr);
+                gap: 10px;
+                padding: 16px;
+            }
+
+            .rank {
+                font-size: 17px;
+            }
+
+            .name {
+                font-size: 17px;
+            }
+
+            .score {
+                grid-column: 2;
+                text-align: left;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <main>
-        <h1>🏆 ランキング TOP 10</h1>
+    <main class="container">
+        <h1>ランキング</h1>
+        <div class="subtitle">SCORE RANKING</div>
 
-        {% if rankings %}
-            {% for player in rankings %}
-                <section class="player">
-                    <div class="rank">{{ loop.index }}位</div>
-                    <div class="name">{{ player.player_name }}</div>
-                    <div class="score">
-                        {{ "{:,}".format(player.score) }} 点
-                    </div>
-                </section>
-            {% endfor %}
-        {% else %}
-            <p>まだランキングの登録がありません。</p>
-        {% endif %}
+        <div class="ranking-list">
+            {% if rankings %}
+                {% for player in rankings %}
+                    <section class="player">
+                        <div class="rank">
+                            {% if loop.index == 1 %}
+                                ★ 1位
+                            {% elif loop.index == 2 %}
+                                ★ 2位
+                            {% elif loop.index == 3 %}
+                                ★ 3位
+                            {% else %}
+                                {{ loop.index }}位
+                            {% endif %}
+                        </div>
 
-        <a class="back" href="{{ url_for('index') }}">← 得点カウンターに戻る</a>
+                        <div class="name">{{ player.player_name }}</div>
+
+                        <div class="score">
+                            {{ "{:,}".format(player.score) }} 点
+                        </div>
+                    </section>
+                {% endfor %}
+            {% else %}
+                <div class="empty">
+                    まだランキングの登録がありません。
+                </div>
+            {% endif %}
+        </div>
+
+        <button class="delete-button" onclick="deleteRankings()">
+            ランキングを全削除
+        </button>
+
+        <a class="back" href="{{ url_for('index') }}">
+            ← 得点カウンターに戻る
+        </a>
     </main>
+
+    <script>
+        async function deleteRankings() {
+            if (!confirm(
+                "ランキングをすべて削除しますか？\nこの操作は取り消せません。"
+            )) {
+                return;
+            }
+
+            const password = prompt("管理用パスワードを入力してください");
+
+            if (password === null || password === "") {
+                return;
+            }
+
+            try {
+                const response = await fetch("/delete_rankings", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ password: password })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    alert(result.error || "削除に失敗しました");
+                    return;
+                }
+
+                alert("ランキングを削除しました");
+                location.reload();
+
+            } catch (error) {
+                alert("通信に失敗しました。時間をおいて再度お試しください。");
+            }
+        }
+    </script>
 </body>
 </html>
