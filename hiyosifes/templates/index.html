@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>得点カウンター</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #f2f4f8;
+            margin: 0;
+            padding: 20px 16px;
+            color: #222;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .item {
+            background: white;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+        }
+
+        .amount {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        button {
+            height: 48px;
+            min-width: 64px;
+            border: none;
+            border-radius: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .plus {
+            background: #d9e7ff;
+        }
+
+        .minus {
+            background: #e5e7eb;
+        }
+
+        .count {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 48px;
+        }
+
+        .total {
+            background: #1e3558;
+            color: white;
+            padding: 22px;
+            border-radius: 14px;
+            margin-top: 20px;
+        }
+
+        .total-label {
+            font-size: 15px;
+        }
+
+        .total-value {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 8px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .reset {
+            width: 100%;
+            margin-top: 14px;
+            background: white;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>得点カウンター</h1>
+
+    <main id="items"></main>
+
+    <section class="total">
+        <div class="total-label">合計得点</div>
+        <div class="total-value" id="total">0 点</div>
+    </section>
+
+    <button class="reset" onclick="resetCounts()">すべてリセット</button>
+
+    <script>
+        const amounts = [10000, 5000, 1000, 500, 100];
+        const counts = [0, 0, 0, 0, 0];
+
+        const items = document.getElementById("items");
+
+        amounts.forEach((amount, i) => {
+            const item = document.createElement("section");
+            item.className = "item";
+
+            item.innerHTML = `
+                <div class="amount">${amount.toLocaleString("ja-JP")} 点</div>
+                <div class="controls">
+                    <button class="plus"
+                        aria-label="${amount}点を1回増やす"
+                        onclick="changeCount(${i}, 1)">＋</button>
+                    <button class="minus"
+                        aria-label="${amount}点を1回減らす"
+                        onclick="changeCount(${i}, -1)">−</button>
+                    <div class="count" id="count-${i}">0</div>
+                </div>
+            `;
+
+            items.appendChild(item);
+        });
+
+        function changeCount(i, delta) {
+            counts[i] = Math.max(0, counts[i] + delta);
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            let total = 0;
+
+            amounts.forEach((amount, i) => {
+                document.getElementById(`count-${i}`).textContent =
+                    counts[i];
+
+                total += amount * counts[i];
+            });
+
+            document.getElementById("total").textContent =
+                `${total.toLocaleString("ja-JP")} 点`;
+        }
+
+        function resetCounts() {
+            counts.fill(0);
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
