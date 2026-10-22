@@ -11,7 +11,9 @@ supabase_key = os.environ.get("SUPABASE_KEY")
 delete_password = os.environ.get("RANKING_DELETE_PASSWORD")
 
 if not supabase_url or not supabase_key:
-    raise RuntimeError("SUPABASE_URL または SUPABASE_KEY が設定されていません")
+    raise RuntimeError(
+        "SUPABASE_URL または SUPABASE_KEY が設定されていません"
+    )
 
 supabase = create_client(supabase_url, supabase_key)
 
@@ -21,6 +23,7 @@ def index():
     return render_template("index.html")
 
 
+# 得点をランキングに登録
 @app.route("/submit_score", methods=["POST"])
 def submit_score():
     data = request.get_json(silent=True) or {}
@@ -55,6 +58,7 @@ def submit_score():
         }), 500
 
 
+# ランキング上位10件を表示
 @app.route("/ranking")
 def ranking():
     try:
@@ -65,7 +69,6 @@ def ranking():
             .order("created_at", desc=False)
             .limit(10)
             .execute()
-            
         )
 
         rankings = result.data or []
@@ -84,10 +87,13 @@ def ranking():
         )
 
 
-@app.route("/delete_rankings", methods=["POST"])
-def delete_rankings():
+# ランキングを1件ずつ削除
+@app.route("/delete_ranking/<int:ranking_id>", methods=["POST"])
+def delete_ranking(ranking_id):
     if not delete_password:
-        app.logger.error("RANKING_DELETE_PASSWORD が設定されていません")
+        app.logger.error(
+            "RANKING_DELETE_PASSWORD が設定されていません"
+        )
         return jsonify({
             "error": "削除機能の設定が完了していません"
         }), 500
@@ -101,7 +107,18 @@ def delete_rankings():
         }), 403
 
     try:
-        supabase.table("rankings").delete().gte("id", 1).execute()
+        result = (
+            supabase.table("rankings")
+            .delete()
+            .eq("id", ranking_id)
+            .select("id")
+            .execute()
+        )
+
+        if not result.data:
+            return jsonify({
+                "error": "削除対象が見つかりません"
+            }), 404
 
         return jsonify({
             "message": "ランキングを削除しました"
