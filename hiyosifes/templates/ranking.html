@@ -289,11 +289,11 @@
                         </div>
 
                         <button
-                            class="delete-one"
-                            onclick="deleteRanking(this, { playerid }, { loop,index })"/
-                        >
-                            削除
-                        </button>
+    class="delete-one"
+    onclick="deleteRanking(this, {{ player.id }}, {{ loop.index }})"
+>
+    削除
+</button>
                     </section>
                 {% endfor %}
             {% else %}
