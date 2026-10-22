@@ -223,9 +223,13 @@
         }
 
         function resetCounts() {
-            counts.fill(0);
-            updateDisplay();
-        }
+    counts.fill(0);
+
+    document.getElementById("player-name").value = "";
+    document.getElementById("submit-message").textContent = "";
+
+    updateDisplay();
+}
 
         async function submitScore() {
             const name = document
