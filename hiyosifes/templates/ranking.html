@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>共有ランキング</title>
+    <title>ランキング</title>
     <style>
         * {
             box-sizing: border-box;
@@ -60,7 +60,7 @@
 </head>
 <body>
     <main>
-        <h1>🏆 共有ランキング TOP 10</h1>
+        <h1>🏆 ランキング TOP 10</h1>
 
         {% if rankings %}
             {% for player in rankings %}
@@ -76,7 +76,7 @@
             <p>まだランキングの登録がありません。</p>
         {% endif %}
 
-        <a href="/">← 得点カウンターに戻る</a>
+        <a class="back" href="{{ url_for('index') }}">← 得点カウンターに戻る</a>
     </main>
 </body>
 </html>
