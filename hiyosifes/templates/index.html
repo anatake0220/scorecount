@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>共有ランキング</title>
+    <title>ランキング</title>
 
     <style>
         * {
@@ -217,7 +217,7 @@
         <section class="board">
             <header class="header">
                 <p class="english-title">BEST SCORE</p>
-                <h1>共有ランキング</h1>
+                <h1>ランキング</h1>
                 <div class="subtitle">★ みんなのベストスコア ★</div>
             </header>
 
@@ -256,7 +256,7 @@
                 </div>
             {% endif %}
 
-            <a class="back" href="/">← 得点カウンターに戻る</a>
+            <a class="back" href="{{ url_for('index') }}">← 得点カウンターに戻る</a>
 
             <div class="footer">
                 YOUR SCORE · YOUR RECORD
