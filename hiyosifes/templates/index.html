@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>得点カウンター</title>
+    <title>共有ランキング</title>
 
     <style>
         * {
@@ -12,152 +12,256 @@
         }
 
         body {
-            font-family: sans-serif;
-            background: #f2f4f8;
             margin: 0;
-            padding: 20px 16px;
-            color: #222;
+            min-height: 100vh;
+            padding: 28px 14px;
+            font-family: sans-serif;
+            color: #fff;
+            background:
+                radial-gradient(ellipse at top, #392052 0%, #160d25 65%, #090711 100%);
+        }
+
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .board {
+            position: relative;
+            overflow: hidden;
+            padding: 28px 18px;
+            border: 3px solid #9c7139;
+            border-radius: 18px;
+            background: linear-gradient(
+                145deg,
+                #35144d 0%,
+                #572578 45%,
+                #29103f 100%
+            );
+            box-shadow:
+                0 0 0 5px #211027,
+                0 0 0 8px #654525,
+                0 14px 35px #0009,
+                inset 0 0 30px #12051e99;
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 22px;
+        }
+
+        .english-title {
+            margin: 0 0 8px;
+            color: #66edff;
+            font-size: clamp(20px, 5vw, 30px);
+            font-weight: 1000;
+            letter-spacing: 1px;
+            text-shadow:
+                2px 3px 0 #1261a3,
+                0 0 7px #70eaff,
+                0 0 17px #41bfff;
         }
 
         h1 {
-            text-align: center;
-            font-size: 26px;
+            margin: 0;
+            color: #f5fbff;
+            font-size: clamp(23px, 6vw, 32px);
+            font-weight: 900;
+            text-shadow:
+                2px 3px 0 #087aab,
+                0 0 8px #41dfff,
+                0 0 18px #20bfff;
         }
 
-        .item {
-            background: white;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-radius: 12px;
+        .subtitle {
+            margin-top: 10px;
+            color: #e4c8ff;
+            font-size: 12px;
+            letter-spacing: 2px;
         }
 
-        .amount {
-            font-size: 20px;
-            font-weight: bold;
+        .gold-line {
+            height: 3px;
+            margin: 0 0 18px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #ffdb82,
+                #fff0b4,
+                #ffdb82,
+                transparent
+            );
         }
 
-        .controls {
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .player {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
             gap: 12px;
-            margin-top: 12px;
-        }
-
-        button {
-            height: 48px;
-            min-width: 64px;
-            border: none;
+            min-width: 0;
+            padding: 13px 12px;
+            border: 1px solid #a985c4;
             border-radius: 10px;
-            font-size: 24px;
-            cursor: pointer;
+            background: linear-gradient(
+                110deg,
+                #29143d,
+                #49205e 55%,
+                #321745
+            );
+            box-shadow:
+                inset 0 1px 4px #ffffff14,
+                0 3px 7px #10071988;
         }
 
-        .plus {
-            background: #d9e7ff;
+        .player:nth-child(-n+3) {
+            border-color: #e7c078;
+            background: linear-gradient(
+                110deg,
+                #452044,
+                #68336f 55%,
+                #402044
+            );
         }
 
-        .minus {
-            background: #e5e7eb;
+        .rank {
+            flex: 0 0 44px;
+            text-align: center;
+            color: #ffe6a3;
+            font-size: 17px;
+            font-weight: 900;
+            text-shadow: 0 0 7px #ffcb69aa;
         }
 
-        .count {
-            font-size: 26px;
+        .player:nth-child(1) .rank {
+            color: #fff0a0;
+            font-size: 23px;
+        }
+
+        .player:nth-child(2) .rank {
+            color: #e9f3ff;
+            font-size: 21px;
+        }
+
+        .player:nth-child(3) .rank {
+            color: #ffc89b;
+            font-size: 21px;
+        }
+
+        .name {
+            flex: 1;
+            min-width: 0;
+            overflow-wrap: anywhere;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .score {
+            flex: 0 0 auto;
+            max-width: 48%;
+            color: #77edff;
+            font-size: clamp(14px, 3.5vw, 19px);
+            font-weight: 900;
+            text-align: right;
+            overflow-wrap: anywhere;
+            text-shadow: 0 0 8px #32cfff88;
+        }
+
+        .empty {
+            padding: 30px 10px;
+            text-align: center;
+            color: #e5d0fa;
+            background: #28133a99;
+            border: 1px solid #8e6aaa;
+            border-radius: 10px;
+        }
+
+        .back {
+            display: block;
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 2px solid #b28cce;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(180deg, #643687, #3b1c58);
+            font-size: 16px;
             font-weight: bold;
             text-align: center;
-            min-width: 48px;
+            text-decoration: none;
+            box-shadow: 0 4px 0 #1a0c28;
         }
 
-        .total {
-            background: #1e3558;
-            color: white;
-            padding: 22px;
-            border-radius: 14px;
-            margin-top: 20px;
+        .back:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #1a0c28;
         }
 
-        .total-label {
-            font-size: 15px;
-        }
-
-        .total-value {
-            font-size: 30px;
-            font-weight: bold;
-            margin: 8px 0;
-            overflow-wrap: anywhere;
-        }
-
-        .reset {
-            width: 100%;
-            margin-top: 14px;
-            background: white;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        .footer {
+            margin-top: 22px;
+            color: #c4a6db;
+            font-size: 11px;
+            text-align: center;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 
 <body>
-    <h1>得点カウンター</h1>
+    <main>
+        <section class="board">
+            <header class="header">
+                <p class="english-title">BEST SCORE</p>
+                <h1>共有ランキング</h1>
+                <div class="subtitle">★ みんなのベストスコア ★</div>
+            </header>
 
-    <main id="items"></main>
+            <div class="gold-line"></div>
 
-    <section class="total">
-        <div class="total-label">合計得点</div>
-        <div class="total-value" id="total">0 点</div>
-    </section>
+            {% if rankings %}
+                <div class="ranking-list">
+                    {% for player in rankings %}
+                        <section class="player">
+                            <div class="rank">
+                                {% if loop.index == 1 %}
+                                    ★1位
+                                {% elif loop.index == 2 %}
+                                    ★2位
+                                {% elif loop.index == 3 %}
+                                    ★3位
+                                {% else %}
+                                    {{ loop.index }}位
+                                {% endif %}
+                            </div>
 
-    <button class="reset" onclick="resetCounts()">すべてリセット</button>
+                            <div class="name">
+                                {{ player.player_name }}
+                            </div>
 
-    <script>
-        const amounts = [10000, 5000, 1000, 500, 100];
-        const counts = [0, 0, 0, 0, 0];
-
-        const items = document.getElementById("items");
-
-        amounts.forEach((amount, i) => {
-            const item = document.createElement("section");
-            item.className = "item";
-
-            item.innerHTML = `
-                <div class="amount">${amount.toLocaleString("ja-JP")} 点</div>
-                <div class="controls">
-                    <button class="plus"
-                        aria-label="${amount}点を1回増やす"
-                        onclick="changeCount(${i}, 1)">＋</button>
-                    <button class="minus"
-                        aria-label="${amount}点を1回減らす"
-                        onclick="changeCount(${i}, -1)">−</button>
-                    <div class="count" id="count-${i}">0</div>
+                            <div class="score">
+                                {{ "{:,}".format(player.score) }} 点
+                            </div>
+                        </section>
+                    {% endfor %}
                 </div>
-            `;
+            {% else %}
+                <div class="empty">
+                    まだランキングの登録がありません。<br>
+                    最初のランクインを目指そう！
+                </div>
+            {% endif %}
 
-            items.appendChild(item);
-        });
+            <a class="back" href="/">← 得点カウンターに戻る</a>
 
-        function changeCount(i, delta) {
-            counts[i] = Math.max(0, counts[i] + delta);
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            let total = 0;
-
-            amounts.forEach((amount, i) => {
-                document.getElementById(`count-${i}`).textContent =
-                    counts[i];
-
-                total += amount * counts[i];
-            });
-
-            document.getElementById("total").textContent =
-                `${total.toLocaleString("ja-JP")} 点`;
-        }
-
-        function resetCounts() {
-            counts.fill(0);
-            updateDisplay();
-        }
-    </script>
+            <div class="footer">
+                YOUR SCORE · YOUR RECORD
+            </div>
+        </section>
+    </main>
 </body>
 </html>

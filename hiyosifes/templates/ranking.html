@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>共有ランキング</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #f2f4f8;
+            color: #222;
+            margin: 0;
+            padding: 20px 16px;
+        }
+
+        main {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+        }
+
+        .rank {
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .name {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .score {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>🏆 共有ランキング TOP 10</h1>
+
+        {% if rankings %}
+            {% for player in rankings %}
+                <section class="player">
+                    <div class="rank">{{ loop.index }}位</div>
+                    <div class="name">{{ player.player_name }}</div>
+                    <div class="score">
+                        {{ "{:,}".format(player.score) }} 点
+                    </div>
+                </section>
+            {% endfor %}
+        {% else %}
+            <p>まだランキングの登録がありません。</p>
+        {% endif %}
+
+        <a href="/">← 得点カウンターに戻る</a>
+    </main>
+</body>
+</html>
