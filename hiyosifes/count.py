@@ -60,11 +60,12 @@ def ranking():
     try:
         result = (
             supabase.table("rankings")
-            .select("player_name, score, created_at")
+            .select("id, player_name, score, created_at")
             .order("score", desc=True)
             .order("created_at", desc=False)
             .limit(10)
             .execute()
+            
         )
 
         rankings = result.data or []
